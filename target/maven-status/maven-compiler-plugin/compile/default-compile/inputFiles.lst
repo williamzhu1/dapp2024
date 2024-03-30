@@ -1,0 +1,10 @@
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/controllers/MealsRestController.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/exceptions/MealNotFoundAdvice.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/domain/MealType.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/controllers/MealsRestRpcStyleController.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/domain/Order.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/domain/MealsRepository.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/domain/Meal.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/exceptions/MealNotFoundException.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/exceptions/OrderNotFoundException.java
+/home/dapp/Desktop/dapp2024work/src/main/java/be/kuleuven/foodrestservice/FoodRestServiceApplication.java
