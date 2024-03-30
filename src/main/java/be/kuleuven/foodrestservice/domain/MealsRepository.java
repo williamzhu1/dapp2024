@@ -10,7 +10,7 @@ import java.util.*;
 public class MealsRepository {
     // map: id -> meal
     private static final Map<String, Meal> meals = new HashMap<>();
-    private static ArrayList<Order> orders = new ArrayList<>();
+    private static final Map<String, Order> orders = new HashMap<>();
 
     @PostConstruct
     public void initData() {
@@ -46,11 +46,11 @@ public class MealsRepository {
         meals.put(c.getId(), c);
 
         Order estebanOrder = new Order();
-        estebanOrder.setId("1");
+        estebanOrder.setId("cfd1601f-29a0-485d-8d21-7607ec0340c1");
         estebanOrder.setAddress("Leuven");
         estebanOrder.addMeal(c);
 //        estebanOrder.setMeals(new ArrayList<>(Arrays.asList(c));
-        orders.add(estebanOrder);
+        orders.put(estebanOrder.id,estebanOrder);
     }
 
     public Optional<Meal> findMeal(String id) {
@@ -97,11 +97,26 @@ public class MealsRepository {
 
     public Optional<Order> findOrder(String id) {
         Assert.notNull(id, "The order id must not be null");
-        Order order = orders.stream().filter(o -> o.getId().equals(id)).findFirst().orElse(null);
+        Order order = orders.get(id);
         return Optional.ofNullable(order);
     }
 
     public Collection<Order> getAllOrder() {
-        return orders;
+        return orders.values();
+    }
+
+    public void addOrder(Order order) {
+        int validcount =0;
+        do {
+            order.setId(UUID.randomUUID().toString());
+        } while (orders.containsKey(order.id));
+        for(int i = 0; i < order.getMeals().size(); i++){
+            if((meals.containsKey(order.getMeals().get(i).id))){
+                validcount += 1;
+            }
+        }
+        if(validcount== order.getMeals().size()){
+            orders.put(order.id, order);
+        }
     }
 }

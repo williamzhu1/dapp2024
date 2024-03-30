@@ -93,6 +93,10 @@ public class MealsRestController {
                 linkTo(methodOn(MealsRestController.class).getOrder()).withSelfRel());
     }
 
+    @PostMapping("/rest/addMeal")
+    void addOrder(@RequestBody Order order) {
+        mealsRepository.addOrder(order);
+    }
 
 
     private EntityModel<Meal> mealToEntityModel(String id, Meal meal) {
