@@ -33,7 +33,7 @@ public class MealsRestRpcStyleController {
         return mealsRepository.getAllMeal();
     }
 
-    @PostMapping("/restrpc/addMeal")
+    @PostMapping("/restrpc/meals")
     void addMeal(@RequestBody Meal meal) {
         mealsRepository.addMeal(meal);
     }

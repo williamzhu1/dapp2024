@@ -44,7 +44,7 @@ public class MealsRestController {
                 linkTo(methodOn(MealsRestController.class).getMeals()).withSelfRel());
     }
 
-    @PostMapping("/rest/addMeal")
+    @PostMapping("/rest/meals")
     void addMeal(@RequestBody Meal meal) {
         mealsRepository.addMeal(meal);
     }
