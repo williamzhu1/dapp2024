@@ -2,7 +2,9 @@ package be.kuleuven.foodrestservice.controllers;
 
 import be.kuleuven.foodrestservice.domain.Meal;
 import be.kuleuven.foodrestservice.domain.MealsRepository;
+import be.kuleuven.foodrestservice.domain.Order;
 import be.kuleuven.foodrestservice.exceptions.MealNotFoundException;
+import be.kuleuven.foodrestservice.exceptions.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -42,10 +44,67 @@ public class MealsRestController {
                 linkTo(methodOn(MealsRestController.class).getMeals()).withSelfRel());
     }
 
+    @PostMapping("/rest/addMeal")
+    void addMeal(@RequestBody Meal meal) {
+        mealsRepository.addMeal(meal);
+    }
+
+    @PutMapping("/rest/meals/{id}")
+    void updateMeal(@RequestBody Meal meal) {
+        mealsRepository.updateMeal(meal);
+    }
+
+    @DeleteMapping("/rest/meals/{id}")
+    void deleteMealById(@PathVariable String id) {
+        mealsRepository.deleteMeal(id);
+    }
+
+    @GetMapping("/rest/meals/getCheapest")
+    EntityModel<Meal> getCheapestMeal() {
+        Meal meal = mealsRepository.getCheapestMeal();
+
+        return mealToEntityModel(meal.getId(), meal);
+    }
+
+    @GetMapping("/rest/meals/getLargest")
+    EntityModel<Meal> getLargestMeal() {
+        Meal meal = mealsRepository.getLargestMeal();
+
+        return mealToEntityModel(meal.getId(), meal);
+    }
+
+    @GetMapping("/rest/orders/{id}")
+    EntityModel<Order> getOrderById(@PathVariable String id) {
+        Order order = mealsRepository.findOrder(id).orElseThrow(() -> new OrderNotFoundException(id));
+
+        return orderToEntityModel(id, order);
+    }
+
+    @GetMapping("/rest/orders")
+    CollectionModel<EntityModel<Order>> getOrder() {
+        Collection<Order> orders = mealsRepository.getAllOrder();
+
+        List<EntityModel<Order>> orderEntityModels = new ArrayList<>();
+        for (Order o : orders) {
+            EntityModel<Order> em = orderToEntityModel(o.getId(), o);
+            orderEntityModels.add(em);
+        }
+        return CollectionModel.of(orderEntityModels,
+                linkTo(methodOn(MealsRestController.class).getOrder()).withSelfRel());
+    }
+
+
+
     private EntityModel<Meal> mealToEntityModel(String id, Meal meal) {
         return EntityModel.of(meal,
                 linkTo(methodOn(MealsRestController.class).getMealById(id)).withSelfRel(),
                 linkTo(methodOn(MealsRestController.class).getMeals()).withRel("rest/meals"));
+    }
+
+    private EntityModel<Order> orderToEntityModel(String id, Order order){
+        return EntityModel.of(order,
+                linkTo(methodOn(MealsRestController.class).getOrderById(id)).withSelfRel(),
+                linkTo(methodOn(MealsRestController.class).getOrder()).withRel("rest/meals"));
     }
 
 }

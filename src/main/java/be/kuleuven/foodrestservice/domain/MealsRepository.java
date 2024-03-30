@@ -10,6 +10,7 @@ import java.util.*;
 public class MealsRepository {
     // map: id -> meal
     private static final Map<String, Meal> meals = new HashMap<>();
+    private static ArrayList<Order> orders = new ArrayList<>();
 
     @PostConstruct
     public void initData() {
@@ -43,6 +44,13 @@ public class MealsRepository {
         c.setPrice(5.00);
 
         meals.put(c.getId(), c);
+
+        Order estebanOrder = new Order();
+        estebanOrder.setId("1");
+        estebanOrder.setAddress("Leuven");
+        estebanOrder.addMeal(c);
+//        estebanOrder.setMeals(new ArrayList<>(Arrays.asList(c));
+        orders.add(estebanOrder);
     }
 
     public Optional<Meal> findMeal(String id) {
@@ -51,7 +59,49 @@ public class MealsRepository {
         return Optional.ofNullable(meal);
     }
 
+    public void addMeal(Meal newMeal){
+        Assert.notNull(newMeal, "The meal object must not be null");
+        do {
+            newMeal.setId(UUID.randomUUID().toString());
+        } while (meals.containsKey(newMeal.id));
+        meals.put(newMeal.getId(), newMeal);
+    }
+
+    public void updateMeal(Meal updatedMeal){
+        Assert.notNull(updatedMeal, "The updated meal object must not be null");
+
+        // Check if the meal exists in the repository
+        if (meals.containsKey(updatedMeal.id)) {
+            meals.put(updatedMeal.id, updatedMeal);
+        } else {
+            throw new IllegalArgumentException("Meal with id " + updatedMeal.getId() + " does not exist.");
+        }
+    }
+
+    public void deleteMeal(String id){
+        Assert.notNull(id, "The meal id must not be null");
+        meals.remove(id);
+    }
+
+    public Meal getCheapestMeal() {
+        return meals.values().stream().min(Comparator.comparing(Meal::getPrice)).orElse(null);
+    }
+
+    public Meal getLargestMeal() {
+        return meals.values().stream().max(Comparator.comparing(Meal::getKcal)).orElse(null);
+    }
+
     public Collection<Meal> getAllMeal() {
         return meals.values();
+    }
+
+    public Optional<Order> findOrder(String id) {
+        Assert.notNull(id, "The order id must not be null");
+        Order order = orders.stream().filter(o -> o.getId().equals(id)).findFirst().orElse(null);
+        return Optional.ofNullable(order);
+    }
+
+    public Collection<Order> getAllOrder() {
+        return orders;
     }
 }
