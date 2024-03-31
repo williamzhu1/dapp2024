@@ -3,6 +3,7 @@ package be.kuleuven.foodrestservice.controllers;
 import be.kuleuven.foodrestservice.domain.Meal;
 import be.kuleuven.foodrestservice.domain.MealsRepository;
 import be.kuleuven.foodrestservice.domain.Order;
+import be.kuleuven.foodrestservice.exceptions.MealAlreadyExists;
 import be.kuleuven.foodrestservice.exceptions.MealNotFoundException;
 import be.kuleuven.foodrestservice.exceptions.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,9 @@ public class MealsRestRpcStyleController {
     }
 
     @PostMapping("/restrpc/meals")
-    void addMeal(@RequestBody Meal meal) {
-        mealsRepository.addMeal(meal);
+    Meal addMeal(@RequestBody Meal meal) {
+        Optional<Meal> newMeal = mealsRepository.addMeal(meal);
+        return newMeal.orElseThrow(MealAlreadyExists::new);
     }
 
     @PutMapping("/restrpc/meals/{id}")
@@ -68,7 +70,7 @@ public class MealsRestRpcStyleController {
         return mealsRepository.getAllOrder();
     }
 
-    @PostMapping("/restrpc/addMeal")
+    @PostMapping("/restrpc/orders")
     void addOrder(@RequestBody Order order) {
         mealsRepository.addOrder(order);
     }

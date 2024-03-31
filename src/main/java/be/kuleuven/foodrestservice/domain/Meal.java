@@ -64,8 +64,7 @@ public class Meal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Meal meal = (Meal) o;
-        return Objects.equals(id, meal.id) &&
-                Objects.equals(name, meal.name) &&
+        return Objects.equals(name, meal.name) &&
                 Objects.equals(kcal, meal.kcal) &&
                 Objects.equals(price, meal.price) &&
                 Objects.equals(description, meal.description) &&

@@ -3,7 +3,9 @@ package be.kuleuven.foodrestservice.controllers;
 import be.kuleuven.foodrestservice.domain.Meal;
 import be.kuleuven.foodrestservice.domain.MealsRepository;
 import be.kuleuven.foodrestservice.domain.Order;
+import be.kuleuven.foodrestservice.exceptions.MealAlreadyExists;
 import be.kuleuven.foodrestservice.exceptions.MealNotFoundException;
+import be.kuleuven.foodrestservice.exceptions.OrderInvalidException;
 import be.kuleuven.foodrestservice.exceptions.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -45,13 +47,15 @@ public class MealsRestController {
     }
 
     @PostMapping("/rest/meals")
-    void addMeal(@RequestBody Meal meal) {
-        mealsRepository.addMeal(meal);
+    EntityModel<Meal>  addMeal(@RequestBody Meal meal) {
+        Meal newMeal = mealsRepository.addMeal(meal).orElseThrow(MealAlreadyExists::new);
+        return mealToEntityModel(newMeal.getId(), newMeal);
     }
 
     @PutMapping("/rest/meals/{id}")
-    void updateMeal(@RequestBody Meal meal) {
-        mealsRepository.updateMeal(meal);
+    EntityModel<Meal> updateMeal(@PathVariable String id, @RequestBody Meal meal) {
+        Meal newMeal = mealsRepository.updateMeal(meal).orElseThrow(() -> new MealNotFoundException(id));;
+        return mealToEntityModel(newMeal.getId(), newMeal);
     }
 
     @DeleteMapping("/rest/meals/{id}")
@@ -93,9 +97,11 @@ public class MealsRestController {
                 linkTo(methodOn(MealsRestController.class).getOrder()).withSelfRel());
     }
 
-    @PostMapping("/rest/addMeal")
-    void addOrder(@RequestBody Order order) {
-        mealsRepository.addOrder(order);
+    @PostMapping("/rest/orders")
+    EntityModel<Order> addOrder(@RequestBody Order order) {
+        Order newOrder = mealsRepository.addOrder(order).orElseThrow(OrderInvalidException::new);
+
+        return orderToEntityModel(newOrder.getId(), newOrder);
     }
 
 

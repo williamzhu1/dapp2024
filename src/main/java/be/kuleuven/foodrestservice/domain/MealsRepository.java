@@ -59,22 +59,30 @@ public class MealsRepository {
         return Optional.ofNullable(meal);
     }
 
-    public void addMeal(Meal newMeal){
+    public Optional<Meal> addMeal(Meal newMeal){
         Assert.notNull(newMeal, "The meal object must not be null");
         do {
             newMeal.setId(UUID.randomUUID().toString());
         } while (meals.containsKey(newMeal.id));
+        for (Meal meal : meals.values()) {
+            // Check if the current meal object is equal to the new meal object
+            if (meal.equals(newMeal)) {
+                return Optional.empty();
+            }
+        }
         meals.put(newMeal.getId(), newMeal);
+        return Optional.of(newMeal);
     }
 
-    public void updateMeal(Meal updatedMeal){
+    public Optional<Meal> updateMeal(Meal updatedMeal){
         Assert.notNull(updatedMeal, "The updated meal object must not be null");
 
         // Check if the meal exists in the repository
         if (meals.containsKey(updatedMeal.id)) {
             meals.put(updatedMeal.id, updatedMeal);
+            return Optional.of(updatedMeal);
         } else {
-            throw new IllegalArgumentException("Meal with id " + updatedMeal.getId() + " does not exist.");
+            return Optional.empty();
         }
     }
 
@@ -105,7 +113,7 @@ public class MealsRepository {
         return orders.values();
     }
 
-    public void addOrder(Order order) {
+    public Optional<Order> addOrder(Order order) {
         int validcount =0;
         do {
             order.setId(UUID.randomUUID().toString());
@@ -117,8 +125,9 @@ public class MealsRepository {
         }
         if(validcount== order.getMeals().size()){
             orders.put(order.id, order);
+            return Optional.of(order);
         }else{
-            throw new IllegalArgumentException("Invalid order");
+            return Optional.empty();
         }
     }
 }
