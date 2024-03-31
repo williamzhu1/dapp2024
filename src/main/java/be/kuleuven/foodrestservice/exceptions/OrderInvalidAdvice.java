@@ -6,9 +6,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class MealAlreadyExists extends RuntimeException {
+public class OrderInvalidAdvice {
 
-    public MealAlreadyExists() {
-        super("MealAlreadyExists");
+
+    @ResponseBody
+    @ExceptionHandler(OrderInvalidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String orderNotFoundHandler(OrderInvalidException ex) {
+        return ex.getMessage();
     }
 }

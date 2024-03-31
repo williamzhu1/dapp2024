@@ -49,7 +49,7 @@ public class MealsRestController {
     @PostMapping("/rest/meals")
     EntityModel<Meal>  addMeal(@RequestBody Meal meal) {
         Meal newMeal = mealsRepository.addMeal(meal).orElseThrow(MealAlreadyExists::new);
-        return mealToEntityModel(newMeal.getId(), newMeal);
+        return mealToEntityModel(meal.getId(), meal);
     }
 
     @PutMapping("/rest/meals/{id}")

@@ -37,7 +37,7 @@ public class MealsRestRpcStyleController {
     @PostMapping("/restrpc/meals")
     Meal addMeal(@RequestBody Meal meal) {
         Optional<Meal> newMeal = mealsRepository.addMeal(meal);
-        return newMeal.orElseThrow(MealAlreadyExists::new);
+        return newMeal.orElseThrow();
     }
 
     @PutMapping("/restrpc/meals/{id}")
