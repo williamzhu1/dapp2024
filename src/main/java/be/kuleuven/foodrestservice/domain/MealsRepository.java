@@ -117,6 +117,8 @@ public class MealsRepository {
         }
         if(validcount== order.getMeals().size()){
             orders.put(order.id, order);
+        }else{
+            throw new IllegalArgumentException("Invalid order");
         }
     }
 }
